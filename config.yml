@@ -1,5 +1,6 @@
 pusher:
 <<<<<<< HEAD
+<<<<<<< HEAD
   app_id: 
   app_key: 
   app_secret: 
@@ -8,3 +9,8 @@ pusher:
   app_key: 8b2f403968425b3b92d1
   app_secret: 8a1d61b575dd2f5ffd90
 >>>>>>> Created demo
+=======
+  app_id: 33010
+  app_key: 665e6015add559766dd5
+  app_secret: be430e0a2554c7b4eef7
+>>>>>>> Changed to different Pusher app

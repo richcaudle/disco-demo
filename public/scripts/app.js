@@ -37,6 +37,8 @@ function initializeUI() {
                 // Check username is not blank
                 if (tempUsername.trim() != '') {
                     username = tempUsername;
+                    username = username.replace("@", "");
+
                     $('#title').empty().append('Welcome ' + username);
                     $(this).dialog("close");
 
@@ -55,9 +57,10 @@ function initializeUI() {
 // Initialise Pusher setup
 function initializePusher() {
 
+    // TODO: Connect to Pusher
     // Open connection to Pusher, specifying app key
     var pusher = new Pusher(PUSHER_CONFIG.APP_KEY);
-    
+
     // Set up Pusher logging to console
     Pusher.log = function (message) {
         if (window.console && window.console.log) {
@@ -67,14 +70,23 @@ function initializePusher() {
 
     // Set callback for authentication
     Pusher.channel_auth_endpoint = "/auth?username=" + username;
-    
+
     // Get socket ID on connection success
     pusher.connection.bind('connected', function () {
         socketId = pusher.connection.socket_id;
         memberId = socketId.replace(".", "");
+        console.log("Member ID: " + memberId);
+        addDancer(username, memberId);
     });
 
-    // Presence channel
+    // TODO: Subscribe to moves channel
+    movesChannel = pusher.subscribe('private-dancers');
+
+    movesChannel.bind('move', function(data) {
+        moveDancer(data.id, data.left);
+    });
+
+    // TODO: Subscribe to presence channel
     presenceChannel = pusher.subscribe('presence-dancers');
 
     presenceChannel.bind('pusher:subscription_succeeded', function () {
@@ -87,13 +99,6 @@ function initializePusher() {
 
     presenceChannel.bind('pusher:member_removed', function (member) {
         removeDancer(member.id);
-    });
-
-    // Presence channel
-    movesChannel = pusher.subscribe('private-dancers');
-
-    movesChannel.bind('move', function(data) {
-    	moveDancer(data.id, data.left);
     });
 }
 
@@ -110,11 +115,14 @@ function getCurrentPositions()
 function addAllDancers()
 {
 	presenceChannel.members.each(function (member) {
-        addDancer(member.info.name, member.id);
-        
-        if(positions[member.id])
+        if(member.id != memberId)
         {
-        	moveDancer(member.id, positions[member.id]);
+            addDancer(member.info.name, member.id);
+            
+            if(positions[member.id])
+            {
+            	moveDancer(member.id, positions[member.id]);
+            }
         }
     });
 }
@@ -134,5 +142,8 @@ function moveDancer(id, left) {
 }
 
 function triggerMove(id, left) {
-	$.post('/move', { id: id, left: left, socketId: socketId });
+	
+    // TODO: Publish move to server & Pusher
+    $.post('/move', { id: id, left: left, socketId: socketId });
+
 }
