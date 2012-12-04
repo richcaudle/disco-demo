@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Pusher - Push It!</title>
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="http://js.pusher.com/1.12/pusher.min.js"></script>
+    <script src="scripts/jquery-ui.js"></script>
+    <link href="styles/ui-lightness/jquery-ui-1.8.23.custom.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="styles/site.css" media="all" rel="stylesheet" type="text/css" />
+    <script>
+
+      // Sets the Pusher app key (using server-side value)
+      var PUSHER_CONFIG = {
+        APP_KEY: '<%= @app_key %>'
+      };
+
+    </script>
+
+  </head>
+  <body>
+
+    <img src="/images/light-green.gif" />
+    <img src="/images/light-yellow.gif" />
+    <img id="glitterball" src="/images/glitter-ball.gif" />
+
+    <div id="dancefloor">
+    </div>
+
+    <!-- Enter name dialog box -->
+    <div id="nameDialog" title="Party!!!">
+        <p>Enter your twitter, join the groove:</p>
+        <p><input type="text" id="username" maxlength="20" /></p>
+    </div>
+
+    <script src="scripts/app.js"></script>
+  </body>
+</html>
