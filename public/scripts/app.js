@@ -24,6 +24,11 @@ function initializeUI() {
         autoOpen: true,
         width: 400,
         modal: true,
+        position: {
+            my: "center",
+            at: "center",
+            of: "#dancefloor"
+        },
         buttons: {
             "Ok": function () {
 

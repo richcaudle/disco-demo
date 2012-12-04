@@ -21,12 +21,12 @@ body { font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size:
 #dancefloor
 {
 	height: 300px;
-	width: 100%;
+	width: 601px;
 }
 
 #glitterball
 {
 	position: absolute;
-	top: 20px;
-	left: 365px;
+	top: 10px;
+	left: 305px;
 }
