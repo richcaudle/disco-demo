@@ -33,7 +33,7 @@ class Server < Sinatra::Base
 
 			#If a presence channel
 			response = Pusher[params[:channel_name]].authenticate(params[:socket_id], {
-		        :user_id => params[:socket_id],
+		        :user_id => params[:socket_id].sub('.',''),
 		        :user_info => {
 		          :name => params[:username]
 		        }

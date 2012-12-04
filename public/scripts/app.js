@@ -1,5 +1,6 @@
 var username;
 var socketId;
+var memberId;
 var movesChannel;
 var presenceChannel;
 var positions;
@@ -14,8 +15,8 @@ function initializeUI() {
 
 	$('#dancefloor').click(function(e)
 	{
-		moveDancer(socketId, e.pageX);
-		triggerMove(socketId, e.pageX);
+		moveDancer(memberId, e.pageX);
+		triggerMove(memberId, e.pageX);
 	});
 
     // Set up 'enter name' dialog and open it
@@ -65,7 +66,7 @@ function initializePusher() {
     // Get socket ID on connection success
     pusher.connection.bind('connected', function () {
         socketId = pusher.connection.socket_id;
-        console.log("Socket ID: " + socketId);
+        memberId = socketId.replace(".", "");
     });
 
     // Presence channel
@@ -106,31 +107,27 @@ function addAllDancers()
 	presenceChannel.members.each(function (member) {
         addDancer(member.info.name, member.id);
         
-        if(positions[getDancerId(member.id)])
+        if(positions[member.id])
         {
-        	moveDancer(member.id, positions[getDancerId(member.id)]);
+        	moveDancer(member.id, positions[member.id]);
         }
     });
 }
 
 function addDancer(username, id)
 {
-	$('#dancefloor').append('<div class="dancer" id="' + getDancerId(id) + '"><img src="http://api.twitter.com/1/users/profile_image?screen_name=' + username + '" /></div>');
+	$('#dancefloor').append('<div class="dancer" id="' + id + '"><img src="http://api.twitter.com/1/users/profile_image?screen_name=' + username + '" /></div>');
 }
 
 function removeDancer(id, left) {
-	$('#' + getDancerId(id)).remove();
+	$('#' + id).remove();
 }
 
 function moveDancer(id, left) {
-	var dancer = $('#' + getDancerId(id));
+	var dancer = $('#' + id);
     dancer.animate({left:(left - dancer.width() / 2)}, { duration: 1500 });
 }
 
-function getDancerId(id) {
-	return id.replace(".", "");
-}
-
 function triggerMove(id, left) {
-	$.post('/move', { id: getDancerId(id), left: left, socketId: socketId });
+	$.post('/move', { id: id, left: left, socketId: socketId });
 }

@@ -3,11 +3,11 @@ h2 { font-size: 1.2em; }
 body { font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size: 100%; 
 	background-image: url(../images/room.jpg);
 	background-repeat: no-repeat;
-	background-size: 50%;
+	background-size: 650px 421px;
 }
 
 /* Squares */
-.dancer { width: 100px; height: 180px; top: 170px; left: 18em; 
+.dancer { width: 100px; height: 180px; top: 225px; left: 100px; 
 	padding: 0.5em; position: absolute; text-align: center; 
 	background-image: url(../images/dancer2.gif);
 	background-repeat: none-repeat;
@@ -28,5 +28,5 @@ body { font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif; font-size:
 {
 	position: absolute;
 	top: 20px;
-	left: 225px;
+	left: 365px;
 }
