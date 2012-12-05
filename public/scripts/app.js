@@ -56,7 +56,6 @@ function initializeUI() {
 function initializePusher() {
 
     // TODO: Connect to Pusher
-
     // Open connection to Pusher, specifying app key
     var pusher = new Pusher(PUSHER_CONFIG.APP_KEY);
 
@@ -78,17 +77,15 @@ function initializePusher() {
         addDancer(username, memberId);
     });
 
-
     // TODO: Subscribe to moves channel
-
     movesChannel = pusher.subscribe('private-dancers');
 
     movesChannel.bind('move', function(data) {
         moveDancer(data.id, data.left);
     });
 
-    // TODO: Subscribe to presence channel
 
+    // TODO: Subscribe to presence channel
     // Presence channel
     presenceChannel = pusher.subscribe('presence-dancers');
 
@@ -103,6 +100,7 @@ function initializePusher() {
     presenceChannel.bind('pusher:member_removed', function (member) {
         removeDancer(member.id);
     });
+
 }
 
 function getCurrentPositions()
