@@ -52,12 +52,11 @@ function initializeUI() {
 
 }
 
-
-
 // Initialise Pusher setup
 function initializePusher() {
 
     // TODO: Connect to Pusher
+
     // Open connection to Pusher, specifying app key
     var pusher = new Pusher(PUSHER_CONFIG.APP_KEY);
 
@@ -79,7 +78,9 @@ function initializePusher() {
         addDancer(username, memberId);
     });
 
+
     // TODO: Subscribe to moves channel
+
     movesChannel = pusher.subscribe('private-dancers');
 
     movesChannel.bind('move', function(data) {
@@ -87,6 +88,8 @@ function initializePusher() {
     });
 
     // TODO: Subscribe to presence channel
+
+    // Presence channel
     presenceChannel = pusher.subscribe('presence-dancers');
 
     presenceChannel.bind('pusher:subscription_succeeded', function () {

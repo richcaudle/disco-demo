@@ -31,12 +31,6 @@ movesChannel.bind('move', function(data) {
 
 // { "id": "19821245505", "left": 300 }
 
-
-/* -------- PUBLISH ------------------------- */
-
-$.post('/move', { id: id, left: left, socketId: socketId });
-
-
 /* -------- PRESENCE ------------------------- */
 
 // Presence channel
@@ -53,3 +47,8 @@ presenceChannel.bind('pusher:member_added', function (member) {
 presenceChannel.bind('pusher:member_removed', function (member) {
     removeDancer(member.id);
 });
+
+
+/* -------- PUBLISH ------------------------- */
+
+$.post('/move', { id: id, left: left, socketId: socketId });

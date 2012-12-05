@@ -52,7 +52,8 @@ class Server < Sinatra::Base
 
 	post '/move' do
 		positions[params[:id]] = params[:left]
-		Pusher['private-dancers'].trigger!('move', {:id => params[:id], :left => params[:left]}, params[:socketId])
+		Pusher['private-dancers'].trigger!('move', 
+			{:id => params[:id], :left => params[:left]}, params[:socketId])
 	end
 
 	get '/positions' do
