@@ -3,13 +3,14 @@ require 'sinatra/base'
 require 'yaml'
 require 'pusher'
 require 'json'
+require './twitterapp'
 
 class Server < Sinatra::Base
 
 	# hash for saving positions of dancers
 	positions = {}
 
-	# set Pusher configuration
+	# set configuration
 	set :public_folder, Proc.new { File.join(root, "public") }
 	config = YAML.load_file('./config.yml')
 
@@ -17,16 +18,25 @@ class Server < Sinatra::Base
 	Pusher.key = config['pusher']['app_key']
 	Pusher.secret = config['pusher']['app_secret']
 
+	TwitterApp.prepare_access_token(
+			config['twitter']['consumer_key'], config['twitter']['consumer_secret'],
+			config['twitter']['token_key'], config['twitter']['token_secret'])
+
 	# main view action
 	get '/' do
+		
 		@app_key = config['pusher']['app_key']
 		erb :index
+
 	end
 
 	# authentication action
 	post '/auth' do
 		content_type :json
 
+		# Fetch user image
+		TwitterApp.get_profile_image(params[:username])
+		
 		channelName = params[:channel_name]
 
 		if params[:channel_name].match(/^presence-/)

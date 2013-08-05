@@ -18,18 +18,17 @@ pusher.connection.bind('connected', function () {
     socketId = pusher.connection.socket_id;
     memberId = socketId.replace(".", "");
     console.log("Member ID: " + memberId);
-    addDancer(username, memberId);
 });
 
 /* -------- SUBSCRIBE TO CHANNEL ------------- */
 
 movesChannel = pusher.subscribe('private-dancers');
 
-movesChannel.bind('move', function(data) {
+movesChannel.bind('client-move', function(data) {
     moveDancer(data.id, data.left);
 });
 
-// { "id": "19821245505", "left": 300 }
+// { "id": "23863605546", "left": 300 }
 
 /* -------- PRESENCE ------------------------- */
 
@@ -41,7 +40,7 @@ presenceChannel.bind('pusher:subscription_succeeded', function () {
 });
 
 presenceChannel.bind('pusher:member_added', function (member) {
-    addDancer(member.info.name, member.id);
+    addDancer(member.id, member.info.name);
 });
 
 presenceChannel.bind('pusher:member_removed', function (member) {
@@ -49,6 +48,11 @@ presenceChannel.bind('pusher:member_removed', function (member) {
 });
 
 
-/* -------- PUBLISH ------------------------- */
+/* -------- PUBLISH (server) ------------------ */
 
 $.post('/move', { id: id, left: left, socketId: socketId });
+
+
+/* -------- PUBLISH (client) -------------------- */
+
+movesChannel.trigger('client-move', { "id": id, "left": left } );

@@ -17,4 +17,5 @@ pickle-email-*.html
 
 .DS_Store
 
-config/initializers/pusher.rb
+config.yml
+/public/profile_images

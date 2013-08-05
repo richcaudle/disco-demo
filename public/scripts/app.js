@@ -13,11 +13,11 @@ $(function () {
 // Sets up UI controls
 function initializeUI() {
 
-	$('#dancefloor').click(function(e)
-	{
-		moveDancer(memberId, e.pageX);
-		triggerMove(memberId, e.pageX);
-	});
+    $('#dancefloor').click(function(e)
+    {
+        moveDancer(memberId, e.pageX);
+        triggerMove(memberId, e.pageX);
+    });
 
     // Set up 'enter name' dialog and open it
     $('#nameDialog').dialog({
@@ -49,13 +49,10 @@ function initializeUI() {
             }
         }
     });
-
 }
 
-// Initialise Pusher setup
+// TODO: Initialise Pusher setup
 function initializePusher() {
-
-    // TODO: Connect to Pusher
     // Open connection to Pusher, specifying app key
     var pusher = new Pusher(PUSHER_CONFIG.APP_KEY);
 
@@ -74,18 +71,14 @@ function initializePusher() {
         socketId = pusher.connection.socket_id;
         memberId = socketId.replace(".", "");
         console.log("Member ID: " + memberId);
-        addDancer(username, memberId);
     });
 
-    // TODO: Subscribe to moves channel
     movesChannel = pusher.subscribe('private-dancers');
 
-    movesChannel.bind('move', function(data) {
+    movesChannel.bind('client-move', function(data) {
         moveDancer(data.id, data.left);
     });
 
-
-    // TODO: Subscribe to presence channel
     // Presence channel
     presenceChannel = pusher.subscribe('presence-dancers');
 
@@ -94,13 +87,17 @@ function initializePusher() {
     });
 
     presenceChannel.bind('pusher:member_added', function (member) {
-        addDancer(member.info.name, member.id);
+        addDancer(member.id, member.info.name);
     });
 
     presenceChannel.bind('pusher:member_removed', function (member) {
         removeDancer(member.id);
     });
+}
 
+// TODO: Publish move to server & Pusher
+function triggerMove(id, left) {
+    movesChannel.trigger('client-move', { "id": id, "left": left } );
 }
 
 function getCurrentPositions()
@@ -116,21 +113,18 @@ function getCurrentPositions()
 function addAllDancers()
 {
 	presenceChannel.members.each(function (member) {
-        if(member.id != memberId)
-        {
-            addDancer(member.info.name, member.id);
+        addDancer(member.id, member.info.name);
             
-            if(positions[member.id])
-            {
-            	moveDancer(member.id, positions[member.id]);
-            }
+        if(positions[member.id])
+        {
+            moveDancer(member.id, positions[member.id]);
         }
     });
 }
 
-function addDancer(username, id)
+function addDancer(id, username)
 {
-	$('#dancefloor').append('<div class="dancer" id="' + id + '"><img src="http://api.twitter.com/1/users/profile_image?screen_name=' + username + '" /></div>');
+	$('#dancefloor').append('<div class="dancer" id="' + id + '"><img src="/profile_images/' + username + '.png" /></div>');
 }
 
 function removeDancer(id, left) {
@@ -140,11 +134,4 @@ function removeDancer(id, left) {
 function moveDancer(id, left) {
 	var dancer = $('#' + id);
     dancer.animate({left:(left - dancer.width() / 2)}, { duration: 1500 });
-}
-
-function triggerMove(id, left) {
-	
-    // TODO: Publish move to server & Pusher
-    $.post('/move', { id: id, left: left, socketId: socketId });
-
 }
